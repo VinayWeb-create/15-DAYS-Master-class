@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-Day Masterclass: Student Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        // Auth Guard
+        if (!sessionStorage.getItem('studentEmail')) { window.location.replace('student-login.html'); }
+    </script>
+    <style>
+        /* Profile Dropdown */
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 50px;
+            transition: background 0.2s;
+            /* font-family: 'Inter', sans-serif; */
+            /* Removed as per instruction */
+        }
+
+        .profile-btn:hover {
+            background: var(--surface-secondary, #f8fafc);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .profile-name-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0f172a;
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-wrapper {
+            position: relative;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            width: 300px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e2e8f0;
+            z-index: 999;
+            overflow: hidden;
+            animation: dropDown 0.2s ease;
+        }
+
+        .profile-dropdown.open {
+            display: block;
+        }
+
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background-clip: padding-box;
+            /* Added for compatibility */
+            -webkit-background-clip: padding-box;
+            /* Added for compatibility */
+        }
+
+        .dropdown-avatar {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* border: 2px solid rgba(255, 255, 255, 0.4); */
+            /* Removed as per instruction */
+            flex-shrink: 0;
+        }
+
+        .dropdown-header-info h4 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .dropdown-header-info p {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.82rem;
+        }
+
+        .dropdown-body {
+            padding: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+        }
+
+        .detail-row:hover {
+            background: #f8fafc;
+        }
+
+        .detail-icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .detail-info {
+            flex: 1;
+        }
+
+        .detail-info small {
+            color: #64748b;
+            font-size: 0.75rem;
+            display: block;
+        }
+
+        .detail-info span {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 12px 0;
+        }
+
+        .progress-mini {
+            padding: 0 12px 4px;
+        }
+
+        .progress-mini .lbl {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .progress-mini .bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-mini .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .logout-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            cursor: pointer;
+            /* font-family: 'Inter', sans-serif; */
+            /* Removed as per instruction */
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed #c7d2fe;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8f9ff;
+            position: relative;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: #4f46e5;
+            background: #eef2ff;
+        }
+
+        .upload-zone input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-zone .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .upload-zone p {
+            font-size: 0.88rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .upload-zone strong {
+            color: #4f46e5;
+        }
+
+        .file-preview {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-preview.visible {
+            display: flex;
+        }
+
+        .file-preview img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .file-preview .file-meta {
+            flex: 1;
+        }
+
+        .file-preview .file-meta strong {
+            font-size: 0.85rem;
+            display: block;
+        }
+
+        .file-preview .file-meta small {
+            color: #64748b;
+            font-size: 0.78rem;
+        }
+
+        .file-preview .remove-file {
+            background: #fee2e2;
+            border: none;
+            color: #ef4444;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Masterclass</h2>
+                <div class="badge">PRO</div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" id="nav-curriculum" onclick="showSection('curriculum')">
+                    <span class="icon">📚</span>
+                    <span>Curriculum</span>
+                </a>
+                <a href="#" class="nav-item" id="nav-support" onclick="showSection('support')">
+                    <span class="icon">🎧</span>
+                    <span>Help & Support</span>
+                </a>
+                <a href="admin-login.html" class="nav-item">
+                    <span class="icon">📊</span>
+                    <span>Instructor Dashboard</span>
+                </a>
+            </nav>
+
+            <div class="user-profile" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                    <div class="avatar" id="profile-initial">S</div>
+                    <div class="user-info">
+                        <p class="name" id="profile-name">Student</p>
+                        <p class="role">Learner</p>
+                    </div>
+                </div>
+                <button onclick="studentLogout()"
+                    style="margin-top: 16px; width: 100%; padding: 10px; background: rgba(239, 68, 68, 0.05); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1); border-radius: 10px; cursor: pointer; font-weight: 700; font-family: 'Outfit', sans-serif; font-size: 0.85rem; transition: all 0.2s;">Sign
+                    Out 👋</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Your Learning Journey</h1>
+                    <p>Track your daily progress and complete tasks.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span>Overall Progress</span>
+                            <span id="overall-progress-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="overall-progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" onclick="toggleTheme()" class="profile-btn"
+                        style="padding: 10px; width: 42px; height: 42px; justify-content: center; font-size: 1.2rem;">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+
+                    <!-- Profile Icon Button -->
+                    <div class="profile-wrapper">
+                        <button class="profile-btn" id="profile-toggle-btn" onclick="toggleProfileDropdown()">
+                            <div class="profile-avatar" id="header-avatar">?</div>
+                            <span class="profile-name-text" id="header-name">Loading</span>
+                            <span>▾</span>
+                        </button>
+
+                        <!-- Profile Dropdown -->
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-avatar" id="dropdown-avatar">?</div>
+                                <div class="dropdown-header-info">
+                                    <h4 id="dd-name">Student Name</h4>
+                                    <p id="dd-email">student@email.com</p>
+                                </div>
+                            </div>
+                            <div class="dropdown-body">
+                                <div class="detail-row">
+                                    <span class="detail-icon">📧</span>
+                                    <div class="detail-info">
+                                        <small>Email</small>
+                                        <span id="dd-email-val">—</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-icon">📱</span>
+                                    <div class="detail-info">
+                                        <small>Phone</small>
+                                        <span id="dd-phone-val">—</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-icon">📅</span>
+                                    <div class="detail-info">
+                                        <small>Joined On</small>
+                                        <span id="dd-joined-val">—</span>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="progress-mini">
+                                    <div class="lbl">
+                                        <span>Course Progress</span>
+                                        <span id="dd-progress-pct">0%</span>
+                                    </div>
+                                    <div class="bar">
+                                        <div class="fill" id="dd-progress-fill" style="width:0%"></div>
+                                    </div>
+                                </div>
+                                <button class="logout-btn" onclick="studentLogout()">🚪 Log Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="days-grid" id="days-container">
+                <!-- Day cards generated by script.js -->
+            </section>
+
+            <!-- Help & Support Section -->
+            <section id="support-container" class="support-container hidden-section">
+                <div class="support-header">
+                    <h2>Help & Support 🎧</h2>
+                    <p>Have a question or facing an issue? Send us a message and our team will get back to you.</p>
+                </div>
+
+                <div class="support-form-card">
+                    <div class="support-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="support-name" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="support-email" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="support-subject" placeholder="What do you need help with?">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="support-message" rows="5"
+                            placeholder="Describe your issue in detail..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="submit-support-btn" onclick="submitSupportRequest()">
+                        Send Message 🚀
+                    </button>
+                    <div id="support-status" style="margin-top: 20px; text-align: center; font-weight: 500;"></div>
+                </div>
+            </section>
+
+            <!-- Premium Footer -->
+            <footer class="app-footer"
+                style="margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+                <div class="footer-mentor">
+                    <p
+                        style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px;">
+                        Mentor & Curator</p>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="avatar" style="width: 32px; height: 32px; font-size: 0.9rem; background: #0f172a;">V
+                        </div>
+                        <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-bright);">Vinay Avala</span>
+                    </div>
+                </div>
+
+                <div class="footer-links" style="display: flex; gap: 16px;">
+                    <a href="https://vinayportfolio.ct.ws/" target="_blank" class="footer-tab-btn"
+                        style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; color: var(--accent); background: var(--accent-glow); padding: 10px 20px; border-radius: 12px; transition: all 0.2s;">
+                        <span>🌐 Portfolio</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/vinay-avala-9470772bb/" target="_blank" class="footer-tab-btn"
+                        style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; color: #0a66c2; background: rgba(10, 102, 194, 0.1); padding: 10px 20px; border-radius: 12px; transition: all 0.2s;">
+                        <span>💼 LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/VinayWeb-create" target="_blank" class="footer-tab-btn"
+                        style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; color: #24292f; background: rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 12px; transition: all 0.2s;">
+                        <span>🐙 GitHub</span>
+                    </a>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">© 2026 Student Learning
+                    Platform. Masterclass with Vinay.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title">Day X Tasks</h2>
+            <div class="modal-body">
+                <p id="modal-description"></p>
+                <div class="task-submission">
+                    <h3>Submit Your Work</h3>
+
+                    <div class="form-group">
+                        <label>🔗 Task / Live Demo Link (CodePen, Vercel, etc.)</label>
+                        <input type="url" id="task-link" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>🐙 GitHub Repository Link</label>
+                        <input type="url" id="github-link" placeholder="https://github.com/your-username/repo">
+                    </div>
+
+                    <div class="form-group">
+                        <label>📎 Upload Screenshot / PDF (max 10 MB)</label>
+                        <div class="upload-zone" id="upload-zone">
+                            <input type="file" id="file-input"
+                                accept="image/jpeg,image/png,image/gif,image/webp,application/pdf">
+                            <div class="upload-icon">☁️</div>
+                            <p><strong>Click to browse</strong> or drag & drop here</p>
+                            <p>JPG, PNG, GIF, WEBP, PDF — up to 10 MB</p>
+                        </div>
+                        <div class="file-preview" id="file-preview">
+                            <img id="preview-thumb" src="" alt="preview" style="display:none">
+                            <div style="font-size:2rem;display:none" id="preview-pdf-icon">📄</div>
+                            <div class="file-meta">
+                                <strong id="preview-name">filename.jpg</strong>
+                                <small id="preview-size">0 KB</small>
+                            </div>
+                            <button class="remove-file" onclick="clearFile()" title="Remove file">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📝 Notes / Questions</label>
+                        <textarea id="task-notes" rows="3"
+                            placeholder="What did you learn today? Any questions?"></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" id="submit-task-btn">Submit Task 🚀</button>
+                    <div id="submission-status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // ── Profile Dropdown Logic ──
+        function populateProfile() {
+            const name = sessionStorage.getItem('studentName') || 'Student';
+            const email = sessionStorage.getItem('studentEmail') || '—';
+            const phone = sessionStorage.getItem('studentPhone') || '—';
+            const joined = sessionStorage.getItem('studentJoined');
+            const initial = name.charAt(0).toUpperCase();
+
+            // Sidebar
+            document.getElementById('profile-initial').innerText = initial;
+            document.getElementById('profile-name').innerText = name;
+
+            // Header button
+            document.getElementById('header-avatar').innerText = initial;
+            document.getElementById('header-name').innerText = name;
+
+            // Dropdown
+            document.getElementById('dropdown-avatar').innerText = initial;
+            document.getElementById('dd-name').innerText = name;
+            document.getElementById('dd-email').innerText = email;
+            document.getElementById('dd-email-val').innerText = email;
+            document.getElementById('dd-phone-val').innerText = phone || '—';
+
+            if (joined) {
+                const d = new Date(joined);
+                document.getElementById('dd-joined-val').innerText = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dd = document.getElementById('profile-dropdown');
+            dd.classList.toggle('open');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrapper = document.querySelector('.profile-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                document.getElementById('profile-dropdown').classList.remove('open');
+            }
+        });
+
+        function studentLogout() {
+            sessionStorage.clear();
+            window.location.href = 'student-login.html';
+        }
+
+        // ── View Switching Logic ──
+        function showSection(sectionId) {
+            const curriculumBtn = document.getElementById('nav-curriculum');
+            const supportBtn = document.getElementById('nav-support');
+            const curriculumGrid = document.getElementById('days-container');
+            const supportSection = document.getElementById('support-container');
+            const headerTitle = document.querySelector('.header-left h1');
+            const headerDesc = document.querySelector('.header-left p');
+
+            if (sectionId === 'curriculum') {
+                curriculumGrid.classList.remove('hidden-section');
+                supportSection.classList.add('hidden-section');
+                curriculumBtn.classList.add('active');
+                supportBtn.classList.remove('active');
+                headerTitle.innerText = 'Your Learning Journey';
+                headerDesc.innerText = 'Track your daily progress and complete tasks.';
+            } else {
+                curriculumGrid.classList.add('hidden-section');
+                supportSection.classList.remove('hidden-section');
+                curriculumBtn.classList.remove('active');
+                supportBtn.classList.add('active');
+                headerTitle.innerText = 'Help & Support';
+                headerDesc.innerText = 'Let us know if you need any assistance.';
+
+                // Pre-fill form
+                document.getElementById('support-name').value = sessionStorage.getItem('studentName') || '';
+                document.getElementById('support-email').value = sessionStorage.getItem('studentEmail') || '';
+            }
+        }
+
+        async function submitSupportRequest() {
+            const name = sessionStorage.getItem('studentName');
+            const email = sessionStorage.getItem('studentEmail');
+            const subject = document.getElementById('support-subject').value.trim();
+            const message = document.getElementById('support-message').value.trim();
+            const statusDiv = document.getElementById('support-status');
+            const btn = document.getElementById('submit-support-btn');
+
+            if (!subject || !message) {
+                statusDiv.innerHTML = '<span style="color:var(--amber)">⚠️ Please fill in both subject and message.</span>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = 'Sending Message...';
+            statusDiv.innerHTML = '';
+
+            try {
+                // Send to BOTH: Our backend (for instructor dashboard) AND Formspree (for email alerts)
+                const [backendRes, formspreeRes] = await Promise.all([
+                    fetch('/api/support', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ studentName: name, studentEmail: email, subject, message })
+                    }),
+                    fetch('https://formspree.io/f/mojpvzlk', {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            subject: subject,
+                            message: message
+                        })
+                    })
+                ]);
+
+                if (backendRes.ok || formspreeRes.ok) {
+                    statusDiv.innerHTML = '<span style="color:var(--emerald)">✅ Support request sent successfully! We will contact you soon.</span>';
+                    document.getElementById('support-subject').value = '';
+                    document.getElementById('support-message').value = '';
+                    setTimeout(() => { showSection('curriculum'); statusDiv.innerHTML = ''; }, 3000);
+                } else {
+                    statusDiv.innerHTML = '<span style="color:var(--rose)">❌ Failed to send request. Please try again later.</span>';
+                }
+            } catch (err) {
+                statusDiv.innerHTML = '<span style="color:var(--rose)">❌ Server error. Please check your internet connection.</span>';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Send Message 🚀';
+            }
+        }
+
+        // Sync progress % into dropdown
+        function syncDropdownProgress() {
+            const pct = document.getElementById('overall-progress-text').innerText;
+            document.getElementById('dd-progress-pct').innerText = pct;
+            document.getElementById('dd-progress-fill').style.width = pct;
+        }
+
+        // Hook into renderDays completion
+        const _origRender = window.renderDays;
+        document.addEventListener('progressUpdated', syncDropdownProgress);
+
+        // ── Theme Logic ──
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.innerText = theme === 'dark' ? '🌙' : '☀️';
+        }
+
+        initTheme();
+        populateProfile();
+    </script>
+</body>
+
+</html>

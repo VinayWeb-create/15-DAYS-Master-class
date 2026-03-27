@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | 15-Day Masterclass</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #8b5cf6;
+            --surface: #0a0c14;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --bg-off: #020408;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-off);
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* ── Left Hero Panel ── */
+        .hero {
+            background: #0f172a;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            filter: blur(120px);
+            opacity: 0.15;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #c4b5fd;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 48px;
+            max-width: 480px;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feat {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .feat-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        /* ── Right Form Panel ── */
+        .form-panel {
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            color: var(--text-main);
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 16px 16px 52px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-box {
+            background: #fff1f2;
+            border: 1px solid #fecaca;
+            color: #be123c;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .error-box.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .note {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 32px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Left Hero -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 FREE 15-Day Program</div>
+            <h1>Launch Your <span>Tech Career</span> Today</h1>
+            <p>Master Web Development and AI/ML with hands-on projects, daily tasks, and expert guidance — completely
+                free.</p>
+            <div class="features">
+                <div class="feat">
+                    <div class="feat-icon">💻</div>HTML, CSS & JavaScript from scratch
+                </div>
+                <div class="feat">
+                    <div class="feat-icon">🤖</div>Introduction to Python & Machine Learning
+                </div>
+                <div class="feat">
+                    <div class="feat-icon">🏗️</div>Build 2 real-world projects for your portfolio
+                </div>
+                <div class="feat">
+                    <div class="feat-icon">📊</div>Daily tasks with progress tracking
+                </div>
+                <div class="feat">
+                    <div class="feat-icon">🎯</div>Interview prep & career guidance
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Form Panel -->
+    <div class="form-panel">
+        <div class="form-box">
+            <div class="form-header">
+                <h2>Welcome 👋</h2>
+                <p>Join or continue your learning journey.</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('register')">New Student</button>
+                <button class="tab-btn" onclick="switchTab('login')">Returning Student</button>
+            </div>
+
+            <!-- Register Tab -->
+            <div class="tab-panel active" id="tab-register">
+                <div class="error-box" id="reg-error"></div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="reg-name" placeholder="e.g. Ravi Kumar" autocomplete="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">📧</span>
+                        <input type="email" id="reg-email" placeholder="e.g. ravi@gmail.com" autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">📱</span>
+                        <input type="tel" id="reg-phone" placeholder="e.g. +91 9876543210" autocomplete="tel">
+                    </div>
+                </div>
+                <button class="submit-btn" id="reg-btn" onclick="registerStudent()">Start My Journey →</button>
+                <p class="note">By joining, you agree to complete daily tasks and put in your best effort. 💪</p>
+            </div>
+
+            <!-- Login Tab -->
+            <div class="tab-panel" id="tab-login">
+                <div class="error-box" id="login-error"></div>
+                <div class="form-group">
+                    <label>Your Email Address</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">📧</span>
+                        <input type="email" id="login-email" placeholder="Enter the email you registered with"
+                            autocomplete="email">
+                    </div>
+                </div>
+                <button class="submit-btn" id="login-btn" onclick="loginStudent()">Continue Learning →</button>
+                <p class="note">We use your email to restore your saved progress from the database.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        // ── Theme Logic ──
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        initTheme();
+
+        // If already logged in, skip this page
+        if (sessionStorage.getItem('studentEmail')) {
+            window.location.href = 'index.html';
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                const tabs = ['register', 'login'];
+                b.classList.toggle('active', tabs[i] === tab);
+            });
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        async function registerStudent() {
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const errBox = document.getElementById('reg-error');
+            const btn = document.getElementById('reg-btn');
+
+            errBox.classList.remove('show');
+            if (!name || !email) { showError(errBox, 'Please enter your name and email.'); return; }
+            if (!email.includes('@')) { showError(errBox, 'Please enter a valid email address.'); return; }
+
+            btn.disabled = true;
+            btn.innerText = 'Setting up your profile...';
+
+            try {
+                const res = await fetch(`${API_BASE}/student/init`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentName: name, studentEmail: email, phone }),
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    saveSession(data);
+                } else {
+                    showError(errBox, data.error || 'Registration failed. Please try again.');
+                    btn.disabled = false;
+                    btn.innerText = 'Start My Journey →';
+                }
+            } catch {
+                showError(errBox, '❌ Cannot reach server. Make sure the backend is running.');
+                btn.disabled = false;
+                btn.innerText = 'Start My Journey →';
+            }
+        }
+
+        async function loginStudent() {
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const errBox = document.getElementById('login-error');
+            const btn = document.getElementById('login-btn');
+
+            errBox.classList.remove('show');
+            if (!email) { showError(errBox, 'Please enter your email address.'); return; }
+
+            btn.disabled = true;
+            btn.innerText = 'Loading your progress...';
+
+            try {
+                const res = await fetch(`${API_BASE}/progress/${encodeURIComponent(email)}`);
+                const data = await res.json();
+                if (res.ok) {
+                    saveSession(data);
+                } else {
+                    showError(errBox, 'No account found with that email. Please register as a new student.');
+                    btn.disabled = false;
+                    btn.innerText = 'Continue Learning →';
+                }
+            } catch {
+                showError(errBox, '❌ Cannot reach server. Make sure the backend is running.');
+                btn.disabled = false;
+                btn.innerText = 'Continue Learning →';
+            }
+        }
+
+        function saveSession(data) {
+            sessionStorage.setItem('studentName', data.studentName);
+            sessionStorage.setItem('studentEmail', data.studentEmail);
+            sessionStorage.setItem('studentPhone', data.phone || '');
+            sessionStorage.setItem('studentJoined', data.createdAt || new Date().toISOString());
+            window.location.href = 'index.html';
+        }
+
+        function showError(el, msg) {
+            el.innerText = msg;
+            el.classList.add('show');
+        }
+
+        // Enter key support
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const active = document.querySelector('.tab-panel.active').id;
+                if (active === 'tab-register') registerStudent();
+                else loginStudent();
+            }
+        });
+    </script>
+</body>
+
+</html>
