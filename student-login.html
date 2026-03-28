@@ -1,522 +1,830 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Login | 15-Day Masterclass</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.4);
-            --secondary: #8b5cf6;
-            --surface: #0a0c14;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
-            --bg-off: #020408;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Login | Web & AI Launchpad 🚀</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════════ */
+    :root {
+      --bg:          #06090f;
+      --surface:     #0d1117;
+      --panel:       #111827;
+      --card:        rgba(255,255,255,0.04);
+      --border:      rgba(255,255,255,0.08);
+      --border-focus:rgba(124,205,137,0.6);
+      --text:        #e8edf5;
+      --muted:       #6b7f96;
+      --faint:       #2a3547;
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', 'Inter', sans-serif;
-        }
+      --green:       #7ccd89;   /* signature accent */
+      --green-glow:  rgba(124,205,137,0.22);
+      --green-deep:  #4caf60;
+      --amber:       #f5b942;
+      --rose:        #f46f6f;
+      --blue:        #64b5f6;
 
-        body {
-            background-color: var(--bg-off);
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
+      --r-sm:  8px;
+      --r-md:  14px;
+      --r-lg:  20px;
+      --r-xl:  28px;
+      --ease:  cubic-bezier(0.4,0,0.2,1);
+      --spring:cubic-bezier(0.175,0.885,0.32,1.275);
+    }
 
-        /* ── Left Hero Panel ── */
-        .hero {
-            background: #0f172a;
-            background-image:
-                radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px;
-            position: relative;
-            overflow: hidden;
-        }
+    /* ══════════════════════════════════════════
+       RESET
+    ══════════════════════════════════════════ */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { font-size:16px; }
+    body {
+      font-family:'DM Sans', sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: var(--primary);
-            border-radius: 50%;
-            top: -100px;
-            right: -100px;
-            filter: blur(120px);
-            opacity: 0.15;
-        }
+    /* ══════════════════════════════════════════
+       ANIMATED BACKGROUND
+    ══════════════════════════════════════════ */
+    .bg-scene {
+      position:fixed; inset:0; z-index:0; overflow:hidden;
+    }
+    /* Noise grain overlay */
+    .bg-scene::before {
+      content:'';
+      position:absolute; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity:.4; pointer-events:none; z-index:1;
+    }
+    .orb {
+      position:absolute; border-radius:50%;
+      filter:blur(80px); pointer-events:none;
+    }
+    .orb-1 {
+      width:600px; height:600px;
+      background:radial-gradient(circle, rgba(124,205,137,0.12) 0%, transparent 70%);
+      top:-200px; left:-100px;
+      animation:driftA 18s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width:500px; height:500px;
+      background:radial-gradient(circle, rgba(100,181,246,0.09) 0%, transparent 70%);
+      bottom:-150px; right:-100px;
+      animation:driftB 22s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width:350px; height:350px;
+      background:radial-gradient(circle, rgba(245,185,66,0.07) 0%, transparent 70%);
+      top:50%; left:40%;
+      animation:driftC 26s ease-in-out infinite alternate;
+    }
+    @keyframes driftA { to { transform:translate(60px, 80px); } }
+    @keyframes driftB { to { transform:translate(-60px,-80px); } }
+    @keyframes driftC { to { transform:translate(40px,-60px); } }
 
-        .hero-content {
-            position: relative;
-            z-index: 10;
-        }
+    /* Grid lines */
+    .grid-lines {
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size:60px 60px;
+      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+    }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #c4b5fd;
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 32px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+    /* ══════════════════════════════════════════
+       SPLIT LAYOUT
+    ══════════════════════════════════════════ */
+    .split {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      width:100%; min-height:100vh;
+      position:relative; z-index:10;
+    }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -1.5px;
-        }
+    /* ── LEFT HERO ── */
+    .hero {
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:80px 72px;
+      position:relative;
+      border-right:1px solid var(--border);
+    }
 
-        .hero h1 span {
-            background: linear-gradient(135deg, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .hero-brand {
+      display:flex; align-items:center; gap:12px;
+      margin-bottom:56px;
+    }
+    .hero-logo {
+      width:48px; height:48px;
+      background:linear-gradient(135deg,var(--green),var(--blue));
+      border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px;
+      box-shadow:0 8px 24px var(--green-glow);
+      animation:logoFloat 4s ease-in-out infinite;
+    }
+    @keyframes logoFloat {
+      0%,100% { transform:translateY(0); }
+      50%      { transform:translateY(-6px); }
+    }
+    .hero-brand-text h1 {
+      font-family:'Syne',sans-serif;
+      font-size:1.1rem; font-weight:800;
+      color:var(--text);
+      letter-spacing:-0.2px;
+    }
+    .hero-brand-text p {
+      font-size:0.75rem; color:var(--muted); font-weight:500;
+    }
 
-        .hero p {
-            color: #94a3b8;
-            font-size: 1.15rem;
-            line-height: 1.6;
-            margin-bottom: 48px;
-            max-width: 480px;
-        }
+    .hero-headline {
+      font-family:'Syne',sans-serif;
+      font-size:clamp(2.2rem,3.5vw,3.2rem);
+      font-weight:800;
+      line-height:1.1;
+      letter-spacing:-1.5px;
+      color:var(--text);
+      margin-bottom:24px;
+    }
+    .hero-headline .accent {
+      background:linear-gradient(135deg,var(--green),var(--blue));
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
 
-        .features {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .hero-sub {
+      font-size:1.05rem; line-height:1.7;
+      color:var(--muted); font-weight:400;
+      max-width:440px; margin-bottom:52px;
+    }
 
-        .feat {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: #cbd5e1;
-            font-weight: 500;
-            font-size: 1rem;
-        }
+    /* Stat chips */
+    .stats {
+      display:flex; gap:16px; flex-wrap:wrap; margin-bottom:56px;
+    }
+    .stat-chip {
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--r-lg);
+      padding:16px 20px;
+      text-align:center;
+      min-width:100px;
+    }
+    .stat-chip .num {
+      font-family:'Syne',sans-serif;
+      font-size:1.6rem; font-weight:800;
+      background:linear-gradient(135deg,var(--green),var(--blue));
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .stat-chip .lbl {
+      font-size:0.72rem; color:var(--muted); font-weight:600;
+      text-transform:uppercase; letter-spacing:0.6px;
+    }
 
-        .feat-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
+    /* Feature list */
+    .features { display:flex; flex-direction:column; gap:14px; }
+    .feat {
+      display:flex; align-items:center; gap:14px;
+      color:var(--muted); font-size:0.92rem; font-weight:500;
+    }
+    .feat-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--green); flex-shrink:0;
+      box-shadow:0 0 8px var(--green-glow);
+    }
 
-        /* ── Right Form Panel ── */
-        .form-panel {
-            background: var(--surface);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 60px;
-            color: var(--text-main);
-        }
+    /* ── RIGHT FORM PANEL ── */
+    .form-panel {
+      display:flex; align-items:center; justify-content:center;
+      padding:60px 64px;
+      background:var(--surface);
+    }
+    .form-box { width:100%; max-width:420px; }
 
-        .form-box {
-            width: 100%;
-            max-width: 440px;
-        }
+    /* Form header */
+    .form-eyebrow {
+      font-size:0.72rem; font-weight:700;
+      text-transform:uppercase; letter-spacing:1.2px;
+      color:var(--green); margin-bottom:12px;
+    }
+    .form-title {
+      font-family:'Syne',sans-serif;
+      font-size:2rem; font-weight:800;
+      letter-spacing:-0.8px; color:var(--text);
+      margin-bottom:6px;
+    }
+    .form-desc { font-size:0.9rem; color:var(--muted); margin-bottom:36px; }
 
-        .form-header {
-            margin-bottom: 40px;
-        }
+    /* Tabs */
+    .tab-row {
+      display:flex; gap:4px;
+      background:var(--faint);
+      padding:4px; border-radius:var(--r-md);
+      margin-bottom:32px;
+    }
+    .tab {
+      flex:1; padding:11px 10px;
+      background:transparent; border:none;
+      border-radius:10px;
+      font-family:'DM Sans',sans-serif;
+      font-weight:600; font-size:0.875rem;
+      color:var(--muted); cursor:pointer;
+      transition:all 0.22s var(--ease);
+    }
+    .tab.active {
+      background:var(--panel);
+      color:var(--text);
+      box-shadow:0 2px 12px rgba(0,0,0,0.4);
+    }
 
-        .form-header h2 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 8px;
-        }
+    /* ── INPUTS ── */
+    .field { margin-bottom:20px; }
+    .field label {
+      display:block;
+      font-size:0.75rem; font-weight:700;
+      color:var(--muted); text-transform:uppercase;
+      letter-spacing:0.7px; margin-bottom:8px;
+    }
+    .input-wrap { position:relative; }
+    .input-icon {
+      position:absolute; left:14px; top:50%;
+      transform:translateY(-50%);
+      font-size:1rem; pointer-events:none;
+      opacity:0.55;
+    }
+    .field input {
+      width:100%; padding:14px 16px 14px 44px;
+      background:var(--card);
+      border:1.5px solid var(--border);
+      border-radius:var(--r-md);
+      color:var(--text);
+      font-family:'DM Sans',sans-serif;
+      font-size:0.95rem; font-weight:400;
+      outline:none;
+      transition:all 0.2s var(--ease);
+      -webkit-appearance:none;
+    }
+    .field input::placeholder { color:var(--muted); }
+    .field input:focus {
+      border-color:var(--green);
+      background:rgba(124,205,137,0.05);
+      box-shadow:0 0 0 4px var(--green-glow);
+    }
+    /* Show/hide password toggle */
+    .eye-toggle {
+      position:absolute; right:14px; top:50%;
+      transform:translateY(-50%);
+      background:none; border:none; cursor:pointer;
+      color:var(--muted); font-size:0.9rem;
+      padding:4px; border-radius:4px;
+      transition:color 0.2s;
+    }
+    .eye-toggle:hover { color:var(--text); }
 
-        .form-header p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 500;
-        }
+    /* Validation states */
+    .field.error input  { border-color:var(--rose); box-shadow:0 0 0 4px rgba(244,111,111,0.15); }
+    .field.valid input  { border-color:var(--green-deep); }
+    .field-msg {
+      font-size:0.75rem; margin-top:6px;
+      font-weight:500; display:none;
+    }
+    .field.error .field-msg { display:block; color:var(--rose); }
 
-        .tabs {
-            display: flex;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 5px;
-            border-radius: 14px;
-            margin-bottom: 32px;
-        }
+    /* ── ERROR BANNER ── */
+    .error-banner {
+      background:rgba(244,111,111,0.1);
+      border:1px solid rgba(244,111,111,0.25);
+      color:#fca5a5; padding:14px 16px;
+      border-radius:var(--r-md); font-size:0.88rem;
+      font-weight:500; margin-bottom:20px;
+      display:none; align-items:center; gap:10px;
+    }
+    .error-banner.show {
+      display:flex;
+      animation:shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform:translateX(0); }
+      25%      { transform:translateX(-6px); }
+      75%      { transform:translateX(6px); }
+    }
 
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+    /* ── SUCCESS BANNER ── */
+    .success-banner {
+      background:rgba(124,205,137,0.1);
+      border:1px solid rgba(124,205,137,0.25);
+      color:var(--green); padding:14px 16px;
+      border-radius:var(--r-md); font-size:0.88rem;
+      font-weight:500; margin-bottom:20px;
+      display:none; align-items:center; gap:10px;
+    }
+    .success-banner.show { display:flex; }
 
-        .tab-btn.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+    /* ── SUBMIT BUTTON ── */
+    .submit-btn {
+      width:100%; padding:16px;
+      background:linear-gradient(135deg,var(--green-deep),var(--green));
+      border:none; border-radius:var(--r-md);
+      color:#0a1a0e;
+      font-family:'Syne',sans-serif;
+      font-size:1rem; font-weight:800;
+      cursor:pointer; letter-spacing:0.2px;
+      transition:all 0.3s var(--spring);
+      box-shadow:0 8px 24px var(--green-glow);
+      position:relative; overflow:hidden;
+      margin-top:6px;
+    }
+    .submit-btn::before {
+      content:'';
+      position:absolute; top:0; left:-100%;
+      width:100%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
+      transition:left 0.5s;
+    }
+    .submit-btn:hover {
+      transform:translateY(-3px);
+      box-shadow:0 16px 36px var(--green-glow);
+    }
+    .submit-btn:hover::before { left:100%; }
+    .submit-btn:active { transform:translateY(0); }
+    .submit-btn:disabled {
+      opacity:0.6; cursor:not-allowed;
+      transform:none; box-shadow:none;
+    }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
+    /* Button inner flex */
+    .btn-inner {
+      display:flex; align-items:center;
+      justify-content:center; gap:10px;
+    }
+    .btn-spinner {
+      width:18px; height:18px;
+      border:2.5px solid rgba(0,0,0,0.2);
+      border-top-color:rgba(0,0,0,0.8);
+      border-radius:50%;
+      animation:spin 0.7s linear infinite;
+      display:none;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    /* ── DIVIDER ── */
+    .divider {
+      display:flex; align-items:center; gap:14px;
+      margin:22px 0; color:var(--faint); font-size:0.78rem;
+    }
+    .divider::before, .divider::after {
+      content:''; flex:1;
+      height:1px; background:var(--border);
+    }
 
-        .input-wrap {
-            position: relative;
-        }
+    /* ── FOOTER NOTE ── */
+    .form-footer {
+      text-align:center; margin-top:28px;
+      color:var(--muted); font-size:0.82rem;
+    }
+    .form-footer strong { color:var(--green); }
 
-        .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.1rem;
-            opacity: 0.7;
-        }
+    /* ── PROGRESS DOTS (visual accent) ── */
+    .progress-dots {
+      display:flex; gap:6px; margin-top:40px;
+    }
+    .dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--faint);
+      transition:all 0.3s var(--ease);
+    }
+    .dot.filled {
+      background:var(--green);
+      box-shadow:0 0 8px var(--green-glow);
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 16px 16px 16px 52px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 500;
-            outline: none;
-            transition: all 0.2s;
-            background: rgba(255, 255, 255, 0.03);
-            color: white;
-        }
+    /* ── PHONE HINT ── */
+    .phone-hint {
+      font-size:0.73rem; color:var(--muted);
+      margin-top:5px; font-weight:400;
+    }
 
-        .form-group input:focus {
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px var(--primary-glow);
-        }
+    /* ══════════════════════════════════════════
+       TOAST NOTIFICATION
+    ══════════════════════════════════════════ */
+    .toast {
+      position:fixed; bottom:28px; right:28px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--r-md);
+      padding:14px 20px;
+      display:flex; align-items:center; gap:12px;
+      font-size:0.88rem; font-weight:500;
+      box-shadow:0 20px 40px rgba(0,0,0,0.5);
+      transform:translateY(80px); opacity:0;
+      transition:all 0.4s var(--spring);
+      z-index:999; max-width:340px;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast-icon { font-size:1.2rem; flex-shrink:0; }
 
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 20px -5px var(--primary-glow);
-            margin-top: 8px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .error-box {
-            background: #fff1f2;
-            border: 1px solid #fecaca;
-            color: #be123c;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-            display: none;
-        }
-
-        .error-box.show {
-            display: block;
-            animation: shake 0.4s ease;
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        .note {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-top: 32px;
-            font-weight: 500;
-        }
-
-        @media (max-width: 1024px) {
-            body {
-                grid-template-columns: 1fr;
-            }
-
-            .hero {
-                display: none;
-            }
-
-            .form-panel {
-                padding: 40px 20px;
-            }
-        }
-    </style>
+    /* ══════════════════════════════════════════
+       MOBILE RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width:900px) {
+      .split { grid-template-columns:1fr; }
+      .hero { display:none; }
+      .form-panel { padding:40px 24px; }
+      .form-box { max-width:100%; }
+    }
+  </style>
 </head>
-
 <body>
 
-    <!-- Left Hero -->
+  <!-- Animated background -->
+  <div class="bg-scene">
+    <div class="grid-lines"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Split layout -->
+  <div class="split">
+
+    <!-- ════════════════════════════
+         LEFT: HERO PANEL
+    ════════════════════════════ -->
     <div class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">🚀 FREE 15-Day Program</div>
-            <h1>Launch Your <span>Tech Career</span> Today</h1>
-            <p>Master Web Development and AI/ML with hands-on projects, daily tasks, and expert guidance — completely
-                free.</p>
-            <div class="features">
-                <div class="feat">
-                    <div class="feat-icon">💻</div>HTML, CSS & JavaScript from scratch
-                </div>
-                <div class="feat">
-                    <div class="feat-icon">🤖</div>Introduction to Python & Machine Learning
-                </div>
-                <div class="feat">
-                    <div class="feat-icon">🏗️</div>Build 2 real-world projects for your portfolio
-                </div>
-                <div class="feat">
-                    <div class="feat-icon">📊</div>Daily tasks with progress tracking
-                </div>
-                <div class="feat">
-                    <div class="feat-icon">🎯</div>Interview prep & career guidance
-                </div>
-            </div>
+
+      <!-- Brand -->
+      <div class="hero-brand">
+        <div class="hero-logo">🚀</div>
+        <div class="hero-brand-text">
+          <h1>Web &amp; AI Launchpad</h1>
+          <p>15-Day Masterclass Portal</p>
         </div>
+      </div>
+
+      <!-- Headline -->
+      <h2 class="hero-headline">
+        Your <span class="accent">tech career</span><br>
+        starts in 15 days.
+      </h2>
+
+      <p class="hero-sub">
+        Go from zero to building real web apps and AI models. Daily tasks, expert review, and a portfolio to show for it.
+      </p>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-chip">
+          <div class="num">15</div>
+          <div class="lbl">Days</div>
+        </div>
+        <div class="stat-chip">
+          <div class="num">3</div>
+          <div class="lbl">Projects</div>
+        </div>
+        <div class="stat-chip">
+          <div class="num">100%</div>
+          <div class="lbl">Free</div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="features">
+        <div class="feat"><div class="feat-dot"></div>HTML, CSS &amp; JavaScript from the ground up</div>
+        <div class="feat"><div class="feat-dot"></div>Python fundamentals &amp; Machine Learning</div>
+        <div class="feat"><div class="feat-dot"></div>Build a portfolio with real deployable projects</div>
+        <div class="feat"><div class="feat-dot"></div>Daily instructor review &amp; progress tracking</div>
+      </div>
+
+      <!-- Decorative progress dots -->
+      <div class="progress-dots">
+        <div class="dot filled"></div><div class="dot filled"></div>
+        <div class="dot filled"></div><div class="dot"></div>
+        <div class="dot"></div>
+      </div>
     </div>
 
-    <!-- Right Form Panel -->
+    <!-- ════════════════════════════
+         RIGHT: FORM PANEL
+    ════════════════════════════ -->
     <div class="form-panel">
-        <div class="form-box">
-            <div class="form-header">
-                <h2>Welcome 👋</h2>
-                <p>Join or continue your learning journey.</p>
-            </div>
+      <div class="form-box">
 
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('register')">New Student</button>
-                <button class="tab-btn" onclick="switchTab('login')">Returning Student</button>
-            </div>
+        <p class="form-eyebrow">Student Access</p>
+        <h2 class="form-title">Welcome 👋</h2>
+        <p class="form-desc">Join the masterclass or pick up where you left off.</p>
 
-            <!-- Register Tab -->
-            <div class="tab-panel active" id="tab-register">
-                <div class="error-box" id="reg-error"></div>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <div class="input-wrap">
-                        <span class="input-icon">👤</span>
-                        <input type="text" id="reg-name" placeholder="e.g. Ravi Kumar" autocomplete="name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <div class="input-wrap">
-                        <span class="input-icon">📧</span>
-                        <input type="email" id="reg-email" placeholder="e.g. ravi@gmail.com" autocomplete="email">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <div class="input-wrap">
-                        <span class="input-icon">📱</span>
-                        <input type="tel" id="reg-phone" placeholder="e.g. +91 9876543210" autocomplete="tel">
-                    </div>
-                </div>
-                <button class="submit-btn" id="reg-btn" onclick="registerStudent()">Start My Journey →</button>
-                <p class="note">By joining, you agree to complete daily tasks and put in your best effort. 💪</p>
-            </div>
-
-            <!-- Login Tab -->
-            <div class="tab-panel" id="tab-login">
-                <div class="error-box" id="login-error"></div>
-                <div class="form-group">
-                    <label>Your Email Address</label>
-                    <div class="input-wrap">
-                        <span class="input-icon">📧</span>
-                        <input type="email" id="login-email" placeholder="Enter the email you registered with"
-                            autocomplete="email">
-                    </div>
-                </div>
-                <button class="submit-btn" id="login-btn" onclick="loginStudent()">Continue Learning →</button>
-                <p class="note">We use your email to restore your saved progress from the database.</p>
-            </div>
+        <!-- Tab switch -->
+        <div class="tab-row" role="tablist">
+          <button class="tab active" id="tab-register" onclick="switchTab('register')" role="tab">New Student</button>
+          <button class="tab"        id="tab-login"    onclick="switchTab('login')"    role="tab">Returning</button>
         </div>
-    </div>
 
-    <script>
-        const API_BASE = '/api';
+        <!-- Error / Success banners (shared) -->
+        <div class="error-banner"   id="error-banner"><span>⚠️</span><span id="error-text">Something went wrong.</span></div>
+        <div class="success-banner" id="success-banner"><span>✅</span><span id="success-text">Loading your dashboard…</span></div>
 
-        // ── Theme Logic ──
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        initTheme();
+        <!-- ── REGISTER FORM ── -->
+        <div id="panel-register">
 
-        // If already logged in, skip this page
-        if (sessionStorage.getItem('studentEmail')) {
-            window.location.href = 'index.html';
-        }
+          <div class="field" id="field-name">
+            <label for="reg-name">Full Name</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="reg-name" placeholder="e.g. Ravi Kumar"
+                     autocomplete="name" oninput="clearFieldError('field-name')">
+            </div>
+            <div class="field-msg">Please enter your full name.</div>
+          </div>
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach((b, i) => {
-                const tabs = ['register', 'login'];
-                b.classList.toggle('active', tabs[i] === tab);
-            });
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
-        }
+          <div class="field" id="field-email">
+            <label for="reg-email">Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon">📧</span>
+              <input type="email" id="reg-email" placeholder="e.g. ravi@gmail.com"
+                     autocomplete="email" oninput="clearFieldError('field-email')">
+            </div>
+            <div class="field-msg">Enter a valid email address.</div>
+          </div>
 
-        async function registerStudent() {
-            const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim().toLowerCase();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const errBox = document.getElementById('reg-error');
-            const btn = document.getElementById('reg-btn');
+          <div class="field" id="field-phone">
+            <label for="reg-phone">Phone Number</label>
+            <div class="input-wrap">
+              <span class="input-icon">📱</span>
+              <input type="tel" id="reg-phone" placeholder="e.g. +91 98765 43210"
+                     autocomplete="tel">
+            </div>
+            <p class="phone-hint">Optional — helps us reach you faster.</p>
+          </div>
 
-            errBox.classList.remove('show');
-            if (!name || !email) { showError(errBox, 'Please enter your name and email.'); return; }
-            if (!email.includes('@')) { showError(errBox, 'Please enter a valid email address.'); return; }
+          <button class="submit-btn" id="reg-btn" onclick="registerStudent()">
+            <div class="btn-inner">
+              <div class="btn-spinner" id="reg-spinner"></div>
+              <span id="reg-btn-text">Start My Journey →</span>
+            </div>
+          </button>
 
-            btn.disabled = true;
-            btn.innerText = 'Setting up your profile...';
+          <div class="form-footer">
+            By joining you agree to complete daily tasks and give your best effort 💪
+          </div>
+        </div>
 
-            try {
-                const res = await fetch(`${API_BASE}/student/init`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studentName: name, studentEmail: email, phone }),
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    saveSession(data);
-                } else {
-                    showError(errBox, data.error || 'Registration failed. Please try again.');
-                    btn.disabled = false;
-                    btn.innerText = 'Start My Journey →';
-                }
-            } catch {
-                showError(errBox, '❌ Cannot reach server. Make sure the backend is running.');
-                btn.disabled = false;
-                btn.innerText = 'Start My Journey →';
-            }
-        }
+        <!-- ── LOGIN FORM ── -->
+        <div id="panel-login" style="display:none;">
 
-        async function loginStudent() {
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const errBox = document.getElementById('login-error');
-            const btn = document.getElementById('login-btn');
+          <div class="field" id="field-login-email">
+            <label for="login-email">Your Registered Email</label>
+            <div class="input-wrap">
+              <span class="input-icon">📧</span>
+              <input type="email" id="login-email" placeholder="Enter the email you signed up with"
+                     autocomplete="email" oninput="clearFieldError('field-login-email')">
+            </div>
+            <div class="field-msg">Enter a valid email address.</div>
+          </div>
 
-            errBox.classList.remove('show');
-            if (!email) { showError(errBox, 'Please enter your email address.'); return; }
+          <button class="submit-btn" id="login-btn" onclick="loginStudent()">
+            <div class="btn-inner">
+              <div class="btn-spinner" id="login-spinner"></div>
+              <span id="login-btn-text">Continue Learning →</span>
+            </div>
+          </button>
 
-            btn.disabled = true;
-            btn.innerText = 'Loading your progress...';
+          <div class="divider">or</div>
 
-            try {
-                const res = await fetch(`${API_BASE}/progress/${encodeURIComponent(email)}`);
-                const data = await res.json();
-                if (res.ok) {
-                    saveSession(data);
-                } else {
-                    showError(errBox, 'No account found with that email. Please register as a new student.');
-                    btn.disabled = false;
-                    btn.innerText = 'Continue Learning →';
-                }
-            } catch {
-                showError(errBox, '❌ Cannot reach server. Make sure the backend is running.');
-                btn.disabled = false;
-                btn.innerText = 'Continue Learning →';
-            }
-        }
+          <div class="form-footer" style="margin-top:0;">
+            New here? <strong style="cursor:pointer;" onclick="switchTab('register')">Register as a new student →</strong>
+          </div>
+        </div>
 
-        function saveSession(data) {
-            sessionStorage.setItem('studentName', data.studentName);
-            sessionStorage.setItem('studentEmail', data.studentEmail);
-            sessionStorage.setItem('studentPhone', data.phone || '');
-            sessionStorage.setItem('studentJoined', data.createdAt || new Date().toISOString());
-            window.location.href = 'index.html';
-        }
+      </div><!-- /form-box -->
+    </div><!-- /form-panel -->
+  </div><!-- /split -->
 
-        function showError(el, msg) {
-            el.innerText = msg;
-            el.classList.add('show');
-        }
+  <!-- Toast notification -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
 
-        // Enter key support
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') {
-                const active = document.querySelector('.tab-panel.active').id;
-                if (active === 'tab-register') registerStudent();
-                else loginStudent();
-            }
+  <script>
+    /* ════════════════════════════════════════
+       CONFIG
+    ════════════════════════════════════════ */
+    const API_BASE = '/api';
+
+    /* ════════════════════════════════════════
+       REDIRECT IF ALREADY LOGGED IN
+    ════════════════════════════════════════ */
+    if (sessionStorage.getItem('studentEmail')) {
+      window.location.replace('index.html');
+    }
+
+    /* ════════════════════════════════════════
+       TAB SWITCHING
+    ════════════════════════════════════════ */
+    function switchTab(tab) {
+      // Toggle tab buttons
+      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+
+      // Toggle panels
+      document.getElementById('panel-register').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('panel-login').style.display   = tab === 'login'    ? 'block' : 'none';
+
+      // Clear banners
+      hideBanners();
+    }
+
+    /* ════════════════════════════════════════
+       VALIDATION HELPERS
+    ════════════════════════════════════════ */
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function setFieldError(fieldId, msg) {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      el.classList.add('error');
+      el.classList.remove('valid');
+      if (msg) el.querySelector('.field-msg').innerText = msg;
+    }
+
+    function setFieldValid(fieldId) {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      el.classList.remove('error');
+      el.classList.add('valid');
+    }
+
+    function clearFieldError(fieldId) {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      el.classList.remove('error', 'valid');
+      hideBanners();
+    }
+
+    /* ════════════════════════════════════════
+       BANNER HELPERS
+    ════════════════════════════════════════ */
+    function showError(msg) {
+      document.getElementById('error-text').innerText = msg;
+      document.getElementById('error-banner').classList.add('show');
+      document.getElementById('success-banner').classList.remove('show');
+    }
+
+    function showSuccess(msg) {
+      document.getElementById('success-text').innerText = msg;
+      document.getElementById('success-banner').classList.add('show');
+      document.getElementById('error-banner').classList.remove('show');
+    }
+
+    function hideBanners() {
+      document.getElementById('error-banner').classList.remove('show');
+      document.getElementById('success-banner').classList.remove('show');
+    }
+
+    /* ════════════════════════════════════════
+       TOAST
+    ════════════════════════════════════════ */
+    function showToast(msg, icon = '✅') {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-icon').innerText = icon;
+      document.getElementById('toast-msg').innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    /* ════════════════════════════════════════
+       BUTTON LOADING STATE
+    ════════════════════════════════════════ */
+    function setBtnLoading(btnId, spinnerId, textId, loading, label = '') {
+      const btn = document.getElementById(btnId);
+      const sp  = document.getElementById(spinnerId);
+      const tx  = document.getElementById(textId);
+      btn.disabled = loading;
+      sp.style.display = loading ? 'block' : 'none';
+      if (!loading && label) tx.innerText = label;
+    }
+
+    /* ════════════════════════════════════════
+       SAVE SESSION & REDIRECT
+    ════════════════════════════════════════ */
+    function saveSession(data) {
+      sessionStorage.setItem('studentName',  data.studentName);
+      sessionStorage.setItem('studentEmail', data.studentEmail);
+      sessionStorage.setItem('studentPhone', data.phone || '');
+      sessionStorage.setItem('studentJoined', data.createdAt || new Date().toISOString());
+      showSuccess('Logged in! Redirecting to your dashboard…');
+      showToast('Welcome back! 🚀');
+      setTimeout(() => window.location.href = 'index.html', 1200);
+    }
+
+    /* ════════════════════════════════════════
+       REGISTER
+    ════════════════════════════════════════ */
+    async function registerStudent() {
+      hideBanners();
+
+      const name  = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+
+      // Validate
+      let hasError = false;
+      if (!name) { setFieldError('field-name', 'Please enter your full name.'); hasError = true; }
+      else setFieldValid('field-name');
+
+      if (!email || !validateEmail(email)) { setFieldError('field-email', 'Enter a valid email address.'); hasError = true; }
+      else setFieldValid('field-email');
+
+      if (hasError) return;
+
+      const phone = document.getElementById('reg-phone').value.trim();
+
+      setBtnLoading('reg-btn','reg-spinner','reg-btn-text', true);
+
+      try {
+        const res  = await fetch(`${API_BASE}/student/init`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentName: name, studentEmail: email, phone }),
         });
-    </script>
-</body>
+        const data = await res.json();
 
+        if (res.ok) {
+          saveSession(data);
+        } else {
+          showError(data.error || 'Registration failed. Please try again.');
+          setBtnLoading('reg-btn','reg-spinner','reg-btn-text', false, 'Start My Journey →');
+        }
+      } catch {
+        showError('Cannot reach the server. Make sure the backend is running.');
+        setBtnLoading('reg-btn','reg-spinner','reg-btn-text', false, 'Start My Journey →');
+      }
+    }
+
+    /* ════════════════════════════════════════
+       LOGIN (returning student — email only)
+    ════════════════════════════════════════ */
+    async function loginStudent() {
+      hideBanners();
+
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+
+      if (!email || !validateEmail(email)) {
+        setFieldError('field-login-email', 'Enter a valid email address.');
+        return;
+      }
+      setFieldValid('field-login-email');
+
+      setBtnLoading('login-btn','login-spinner','login-btn-text', true);
+
+      try {
+        const res  = await fetch(`${API_BASE}/progress/${encodeURIComponent(email)}`);
+        const data = await res.json();
+
+        if (res.ok) {
+          saveSession(data);
+        } else {
+          showError('No account found for that email. Please register as a new student.');
+          setBtnLoading('login-btn','login-spinner','login-btn-text', false, 'Continue Learning →');
+        }
+      } catch {
+        showError('Cannot reach the server. Make sure the backend is running.');
+        setBtnLoading('login-btn','login-spinner','login-btn-text', false, 'Continue Learning →');
+      }
+    }
+
+    /* ════════════════════════════════════════
+       ENTER KEY SUPPORT
+    ════════════════════════════════════════ */
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const isRegister = document.getElementById('panel-register').style.display !== 'none';
+      if (isRegister) registerStudent(); else loginStudent();
+    });
+
+    /* ════════════════════════════════════════
+       ANIMATED HERO DOTS (fill as if loading)
+    ════════════════════════════════════════ */
+    (function animateDots() {
+      const dots = document.querySelectorAll('.dot');
+      let i = 3; // already 3 filled in HTML
+      const interval = setInterval(() => {
+        if (i >= dots.length) { clearInterval(interval); return; }
+        dots[i].classList.add('filled');
+        i++;
+      }, 900);
+    })();
+  </script>
+</body>
 </html>
