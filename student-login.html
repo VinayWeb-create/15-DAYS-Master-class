@@ -838,14 +838,55 @@
     @media (max-width:900px) {
       .split {
         grid-template-columns: 1fr;
+        display: block;
       }
 
       .hero {
-        display: none;
+        padding: 40px 24px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
       }
 
       .form-panel {
-        padding: 40px 24px;
+        padding: 60px 24px;
+      }
+    }
+
+    /* ── Ticker Animation ── */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      background: rgba(15, 37, 84, 0.4);
+      border-top: 1px solid var(--border);
+      padding: 12px 0;
+      position: relative;
+    }
+
+    .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker-motion 40s linear infinite;
+    }
+
+    .ticker div {
+      padding: 0 40px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    @keyframes ticker-motion {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
       }
     }
   </style>
@@ -910,10 +951,10 @@
 
       <!-- Trust Video -->
       <div class="video-section" onclick="toggleMainVideo()">
-        <video id="main-video" poster="logo.png" loop muted>
+        <video id="main-video" poster="logo.png" autoplay loop muted playsinline>
           <source src="video.mp4" type="video/mp4">
         </video>
-        <div class="video-overlay" id="video-overlay">
+        <div class="video-overlay" id="video-overlay" style="opacity: 0; pointer-events: none;">
           <div class="play-btn">▶</div>
         </div>
       </div>
@@ -1018,6 +1059,27 @@
           <div class="form-footer" style="margin-top:0">New here? <strong onclick="switchTab('register')">Register as a
               new student →</strong></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Skills Ticker -->
+    <div class="ticker-wrap">
+      <div class="ticker">
+        <div><span>🔥</span> Python Programming</div>
+        <div><span>🚀</span> Full Stack Development</div>
+        <div><span>🤖</span> AI & Machine Learning</div>
+        <div><span>📊</span> Data Analysis</div>
+        <div><span>🎨</span> Modern UI/UX</div>
+        <div><span>🔗</span> Deployment & Cloud</div>
+        <div><span>🎓</span> Professional Certification</div>
+        <!-- Duplicated for seamless loop -->
+        <div><span>🔥</span> Python Programming</div>
+        <div><span>🚀</span> Full Stack Development</div>
+        <div><span>🤖</span> AI & Machine Learning</div>
+        <div><span>📊</span> Data Analysis</div>
+        <div><span>🎨</span> Modern UI/UX</div>
+        <div><span>🔗</span> Deployment & Cloud</div>
+        <div><span>🎓</span> Professional Certification</div>
       </div>
     </div>
   </div>
