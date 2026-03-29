@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Login | Campus to Corporate — 15-Day Masterclass</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0f2554;
+      --navy-deep: #091840;
+      --navy-mid: #1a3a6e;
+      --gold: #c9980a;
+      --gold-light: #f0bc2e;
+      --gold-glow: rgba(201, 152, 10, 0.22);
+      --surface: #0b1e47;
+      --card: rgba(255, 255, 255, 0.045);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #e8eef8;
+      --muted: #7b93c5;
+      --faint: #243a6b;
+      --rose: #f46f6f;
+      --green: #3ecf8e;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--navy-deep);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── BG ── */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .35;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(15, 37, 84, 0.8) 0%, rgba(201, 152, 10, 0.06) 60%, transparent 80%);
+      top: -100px;
+      left: -150px;
+      animation: drift1 20s ease-in-out infinite alternate;
+    }
+
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(201, 152, 10, 0.08) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      animation: drift2 25s ease-in-out infinite alternate;
+    }
+
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(26, 58, 110, 0.6) 0%, transparent 70%);
+      top: 40%;
+      left: 45%;
+      animation: drift3 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 {
+      to {
+        transform: translate(50px, 70px);
+      }
+    }
+
+    @keyframes drift2 {
+      to {
+        transform: translate(-40px, -60px);
+      }
+    }
+
+    @keyframes drift3 {
+      to {
+        transform: translate(30px, -40px);
+      }
+    }
+
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(201, 152, 10, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201, 152, 10, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+    }
+
+    /* ── LAYOUT ── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px;
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 52px;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 8px 28px var(--gold-glow);
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+
+    .logo-img {
+      height: 64px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      /* If the image has a white background, this makes it look like a clean badge */
+      background: white;
+      padding: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s var(--spring);
+    }
+
+    .logo-img:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(201, 152, 10, 0.2);
+    }
+
+    .video-section {
+      margin-top: 32px;
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+    }
+
+    .video-section video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 24, 64, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s var(--ease);
+    }
+
+    .video-section:hover .video-overlay {
+      background: rgba(9, 24, 64, 0.2);
+    }
+
+    .play-btn {
+      width: 60px;
+      height: 60px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--navy-deep);
+      box-shadow: 0 0 20px var(--gold-glow);
+      transition: all 0.3s var(--spring);
+    }
+
+    .video-section:hover .play-btn {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .trust-icon {
+      color: var(--gold);
+    }
+
+    /* FEATURED PROJECTS */
+    .projects-showcase {
+      margin-top: 52px;
+    }
+
+    .projects-showcase h3 {
+      font-size: 1.2rem;
+      color: var(--text);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--spring);
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .project-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: var(--gold-glow);
+      padding: 4px 10px;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .project-card h4 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .project-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .project-preview {
+      margin-top: 16px;
+      height: 120px;
+      background: var(--navy-deep);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      position: relative;
+    }
+
+    .project-preview::after {
+      content: 'STUDENT PROJECT';
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--gold);
+      opacity: 0.5;
+    }
+
+    @media (max-width: 600px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @keyframes logoFloat {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+    }
+
+    .brand-text h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: 0.2px;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.1rem, 3.5vw, 3.1rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero-headline .gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 44px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .stat-chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .stat-chip .num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-chip .lbl {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 2px;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .feat-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--gold-glow);
+    }
+
+    .mentor-block {
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mentor-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--navy-mid), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .mentor-info p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .mentor-info h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    /* ── FORM PANEL ── */
+    .form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 56px;
+      background: rgba(9, 24, 64, 0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .form-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .form-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 11px 10px;
+      background: transparent;
+      border: none;
+      border-radius: 9px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.22s var(--ease);
+    }
+
+    .tab.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 7px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px 13px 44px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s var(--ease);
+    }
+
+    .field input::placeholder {
+      color: var(--muted);
+    }
+
+    .field input:focus {
+      border-color: var(--gold);
+      background: rgba(201, 152, 10, 0.06);
+      box-shadow: 0 0 0 4px var(--gold-glow);
+    }
+
+    .field.error input {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 4px rgba(244, 111, 111, 0.12);
+    }
+
+    .field-msg {
+      font-size: 0.74rem;
+      margin-top: 5px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .field.error .field-msg {
+      display: block;
+      color: var(--rose);
+    }
+
+    .phone-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .error-banner {
+      background: rgba(244, 111, 111, 0.1);
+      border: 1px solid rgba(244, 111, 111, 0.25);
+      color: #fca5a5;
+      padding: 13px 16px;
+      border-radius: 11px;
+      font-size: 0.87rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .error-banner.show {
+      display: flex;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      25% {
+        transform: translateX(-5px)
+      }
+
+      75% {
+        transform: translateX(5px)
+      }
+    }
+
+    .success-banner {
+      background: rgba(62, 207, 142, 0.1);
+      border: 1px solid rgba(62, 207, 142, 0.25);
+      color: var(--green);
+      padding: 13px 16px;
+      border-radius: 11px;
+      font-size: 0.87rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .success-banner.show {
+      display: flex;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--navy-mid), var(--gold));
+      border: none;
+      border-radius: 11px;
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: all 0.3s var(--spring);
+      box-shadow: 0 8px 24px var(--gold-glow);
+      position: relative;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px var(--gold-glow);
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, 0.25);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 20px 0;
+      color: var(--faint);
+      font-size: 0.77rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .form-footer strong {
+      color: var(--gold);
+      cursor: pointer;
+    }
+
+    .form-footer strong:hover {
+      text-decoration: underline;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.87rem;
+      font-weight: 600;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.4s var(--spring);
+      z-index: 999;
+      max-width: 320px;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width:900px) {
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        display: none;
+      }
+
+      .form-panel {
+        padding: 40px 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-scene">
+    <div class="grid-lines"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="split">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="brand">
+        <img src="logo.png" alt="Campus to Corporate" class="logo-img">
+      </div>
+
+      <h2 class="hero-headline">
+        Your <span class="gold">tech career</span><br>
+        starts in 15 days.
+      </h2>
+      <p class="hero-sub">
+        From zero to building real web apps and AI models. Daily hands-on tasks, expert instructor review, and a
+        portfolio that opens doors.
+      </p>
+
+      <div class="stats">
+        <div class="stat-chip">
+          <div class="num">15</div>
+          <div class="lbl">Days</div>
+        </div>
+        <div class="stat-chip">
+          <div class="num">3</div>
+          <div class="lbl">Projects</div>
+        </div>
+        <div class="stat-chip">
+          <div class="num">₹6L+</div>
+          <div class="lbl">Avg CTC</div>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-dot"></div>HTML, CSS &amp; JavaScript — from scratch
+        </div>
+        <div class="feat">
+          <div class="feat-dot"></div>Build a real portfolio with 3 deployable projects
+        </div>
+        <div class="feat">
+          <div class="feat-dot"></div>Python fundamentals &amp; your first ML model
+        </div>
+        <div class="feat">
+          <div class="feat-dot"></div>Daily instructor review &amp; progress tracking
+        </div>
+        <div class="feat">
+          <div class="feat-dot"></div>Career roadmap: roles, salaries &amp; next steps
+        </div>
+      </div>
+
+      <!-- Trust Video -->
+      <div class="video-section" onclick="toggleMainVideo()">
+        <video id="main-video" poster="logo.png" loop muted>
+          <source src="video.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay" id="video-overlay">
+          <div class="play-btn">▶</div>
+        </div>
+      </div>
+
+      <div class="trust-badges">
+        <div class="trust-item"><span class="trust-icon">🛡️</span> ISO Certified</div>
+        <div class="trust-item"><span class="trust-icon">⭐</span> 4.9/5 Rating</div>
+        <div class="trust-item"><span class="trust-icon">👥</span> 5000+ Students</div>
+      </div>
+
+      <div class="mentors-row"
+        style="margin-top:44px; padding-top:28px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:32px;">
+        <div class="mentor-block" style="margin-top:0; padding-top:0; border-top:none;">
+          <div class="mentor-avatar">V</div>
+          <div class="mentor-info">
+            <p>Mentor & Curator</p>
+            <h4>Vinay Avala</h4>
+          </div>
+        </div>
+        <div class="mentor-block" style="margin-top:0; padding-top:0; border-top:none;">
+          <div class="mentor-avatar" style="background:linear-gradient(135deg, #1a3a6e, #c9980a)">V</div>
+          <div class="mentor-info">
+            <p>Mentor & Creator</p>
+            <h4>Veeresh Thondapu</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-panel">
+      <div class="form-box">
+        <p class="form-eyebrow">Student Access Portal</p>
+        <h2 class="form-title">Welcome 👋</h2>
+        <p class="form-desc">Join the masterclass or continue your learning journey.</p>
+
+        <div class="tab-row">
+          <button class="tab active" id="tab-register" onclick="switchTab('register')">New Student</button>
+          <button class="tab" id="tab-login" onclick="switchTab('login')">Returning</button>
+        </div>
+
+        <div class="error-banner" id="error-banner"><span>⚠️</span><span id="error-text">Something went wrong.</span>
+        </div>
+        <div class="success-banner" id="success-banner"><span>✅</span><span id="success-text">Loading your
+            dashboard…</span></div>
+
+        <!-- REGISTER -->
+        <div id="panel-register">
+          <div class="field" id="field-name">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="reg-name" placeholder="e.g. Ravi Kumar" autocomplete="name"
+                oninput="clearFieldError('field-name')">
+            </div>
+            <div class="field-msg">Please enter your full name.</div>
+          </div>
+          <div class="field" id="field-email">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon">📧</span>
+              <input type="email" id="reg-email" placeholder="e.g. ravi@gmail.com" autocomplete="email"
+                oninput="clearFieldError('field-email')">
+            </div>
+            <div class="field-msg">Enter a valid email address.</div>
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+              <span class="input-icon">📱</span>
+              <input type="tel" id="reg-phone" placeholder="e.g. +91 98765 43210" autocomplete="tel">
+            </div>
+            <p class="phone-hint">Optional — helps us reach you faster.</p>
+          </div>
+          <button class="submit-btn" id="reg-btn" onclick="registerStudent()">
+            <div class="btn-inner">
+              <div class="btn-spinner" id="reg-spinner"></div>
+              <span id="reg-btn-text">Start My Journey →</span>
+            </div>
+          </button>
+          <div class="form-footer">By joining, you commit to giving your best effort every day 💪</div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="panel-login" style="display:none">
+          <div class="field" id="field-login-email">
+            <label>Your Registered Email</label>
+            <div class="input-wrap">
+              <span class="input-icon">📧</span>
+              <input type="email" id="login-email" placeholder="Enter the email you signed up with" autocomplete="email"
+                oninput="clearFieldError('field-login-email')">
+            </div>
+            <div class="field-msg">Enter a valid email address.</div>
+          </div>
+          <button class="submit-btn" id="login-btn" onclick="loginStudent()">
+            <div class="btn-inner">
+              <div class="btn-spinner" id="login-spinner"></div>
+              <span id="login-btn-text">Continue Learning →</span>
+            </div>
+          </button>
+          <div class="divider">or</div>
+          <div class="form-footer" style="margin-top:0">New here? <strong onclick="switchTab('register')">Register as a
+              new student →</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    if (sessionStorage.getItem('studentEmail')) window.location.replace('index.html');
+
+    function switchTab(tab) {
+      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('panel-register').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('panel-login').style.display = tab === 'login' ? 'block' : 'none';
+      hideBanners();
+    }
+    function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+    function setFieldError(id, msg) { const el = document.getElementById(id); if (!el) return; el.classList.add('error'); if (msg) el.querySelector('.field-msg').innerText = msg; }
+    function clearFieldError(id) { const el = document.getElementById(id); if (!el) return; el.classList.remove('error'); hideBanners(); }
+    function showError(msg) { document.getElementById('error-text').innerText = msg; document.getElementById('error-banner').classList.add('show'); document.getElementById('success-banner').classList.remove('show'); }
+    function showSuccess(msg) { document.getElementById('success-text').innerText = msg; document.getElementById('success-banner').classList.add('show'); document.getElementById('error-banner').classList.remove('show'); }
+    function hideBanners() { document.getElementById('error-banner').classList.remove('show'); document.getElementById('success-banner').classList.remove('show'); }
+    function showToast(msg, icon = '✅') { const t = document.getElementById('toast'); document.getElementById('toast-icon').innerText = icon; document.getElementById('toast-msg').innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
+    function setBtnLoading(btnId, spinnerId, textId, loading, label = '') { const btn = document.getElementById(btnId); const sp = document.getElementById(spinnerId); const tx = document.getElementById(textId); btn.disabled = loading; sp.style.display = loading ? 'block' : 'none'; if (!loading && label) tx.innerText = label; }
+    function saveSession(data) {
+      sessionStorage.setItem('studentName', data.studentName);
+      sessionStorage.setItem('studentEmail', data.studentEmail);
+      sessionStorage.setItem('studentPhone', data.phone || '');
+      sessionStorage.setItem('studentJoined', data.createdAt || new Date().toISOString());
+      showSuccess('Welcome! Redirecting to your dashboard…');
+      showToast('Welcome to Campus to Corporate! 🎓');
+      setTimeout(() => window.location.href = 'index.html', 1200);
+    }
+    async function registerStudent() {
+      hideBanners();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+      let hasError = false;
+      if (!name) { setFieldError('field-name', 'Please enter your full name.'); hasError = true; }
+      if (!email || !validateEmail(email)) { setFieldError('field-email', 'Enter a valid email address.'); hasError = true; }
+      if (hasError) return;
+      const phone = document.getElementById('reg-phone').value.trim();
+      setBtnLoading('reg-btn', 'reg-spinner', 'reg-btn-text', true);
+      try {
+        const res = await fetch(`${API_BASE}/student/init`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentName: name, studentEmail: email, phone }) });
+        const data = await res.json();
+        if (res.ok) { saveSession(data); } else { showError(data.error || 'Registration failed. Please try again.'); setBtnLoading('reg-btn', 'reg-spinner', 'reg-btn-text', false, 'Start My Journey →'); }
+      } catch { showError('Cannot reach the server. Make sure the backend is running.'); setBtnLoading('reg-btn', 'reg-spinner', 'reg-btn-text', false, 'Start My Journey →'); }
+    }
+    async function loginStudent() {
+      hideBanners();
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      if (!email || !validateEmail(email)) { setFieldError('field-login-email', 'Enter a valid email address.'); return; }
+      setBtnLoading('login-btn', 'login-spinner', 'login-btn-text', true);
+      try {
+        const res = await fetch(`${API_BASE}/progress/${encodeURIComponent(email)}`);
+        const data = await res.json();
+        if (res.ok) { saveSession(data); } else { showError('No account found for that email. Please register as a new student.'); setBtnLoading('login-btn', 'login-spinner', 'login-btn-text', false, 'Continue Learning →'); }
+      } catch { showError('Cannot reach the server. Make sure the backend is running.'); setBtnLoading('login-btn', 'login-spinner', 'login-btn-text', false, 'Continue Learning →'); }
+    }
+
+    // Video Control
+    function toggleMainVideo() {
+      const v = document.getElementById('main-video');
+      const overlay = document.getElementById('video-overlay');
+      if (v.paused) {
+        v.play();
+        v.muted = false;
+        overlay.style.opacity = '0';
+      } else {
+        v.pause();
+        overlay.style.opacity = '1';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const isReg = document.getElementById('panel-register').style.display !== 'none';
+      if (isReg) registerStudent(); else loginStudent();
+    });
+  </script>
+</body>
+
+</html>
