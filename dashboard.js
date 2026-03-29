@@ -142,7 +142,7 @@ function renderStudentsGrid() {
             <td><strong style="font-size:1.05rem;color:var(--text-bright)">${stu.studentName}</strong></td>
             <td>${stu.studentEmail}</td>
             <td><span style="font-weight:700">${subCount}</span> tasks</td>
-            <td><span class="status-badge status-completed">${compCount} / 15</span></td>
+            <td><span class="status-badge status-completed">${compCount} / 17</span></td>
             <td style="color:var(--text-muted)">${joined}</td>
             <td>
                 <button class="action-btn" style="background:#4f46e5;padding:10px 16px;" onclick="openStudentDetail('${stu.studentEmail}')">👁️ View Full Profile</button>
@@ -222,7 +222,7 @@ function openStudentDetail(email) {
 
     // Progress
     const completedCount = stu.progress.filter(p => p.completed).length;
-    const pct = Math.round((completedCount / 15) * 100);
+    const pct = Math.round((completedCount / 17) * 100);
     document.getElementById('sd-progress-fill').style.width = `${pct}%`;
     document.getElementById('sd-progress-pct').innerText = `${pct}%`;
 
@@ -231,7 +231,7 @@ function openStudentDetail(email) {
     listBody.innerHTML = '';
 
     // Day 1-15 loop
-    for (let day = 1; day <= 15; day++) {
+    for (let day = 1; day <= 17; day++) {
         const prog = stu.progress.find(p => p.day === day);
         const sub = allSubmissions.find(s => s.studentEmail === email && s.day === day);
 
